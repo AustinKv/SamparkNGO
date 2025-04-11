@@ -151,8 +151,7 @@ const ProfileHeader = ({ userData, onSave, isOwnProfile }) => {
 	// User stats data (posts, followers, following)
 	const userStats = [
 		{ label: "Posts", value: userData.posts?.length || 0 },
-		{ label: "Followers", value: userData.followers?.length || 0 },
-		{ label: "Following", value: userData.following?.length || 0 },
+		{ label: "Connections", value: userData.connections?.length || 0 },
 	];
 
 	return (

@@ -19,11 +19,11 @@ const userSchema = new mongoose.Schema(
 		},
 		headline: {
 			type: String,
-			default: "Linkedin User",
+			default: "Sampark User",
 		},
 		location: {
 			type: String,
-			default: "Earth",
+			default: "India",
 		},
 		about: {
 			type: String,
