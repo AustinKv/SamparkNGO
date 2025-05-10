@@ -5,6 +5,7 @@ import { ExternalLink, Eye, MessageSquare, ThumbsUp, Trash2, UserPlus } from "lu
 import { Link } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import { formatDistanceToNow } from "date-fns";
+import { AlertTriangle } from "lucide-react";
 
 const NotificationsPage = () => {
 	const { data: authUser } = useQuery({ queryKey: ["authUser"] });
@@ -40,6 +41,8 @@ const NotificationsPage = () => {
 				return <MessageSquare className='text-green-500' />;
 			case "connectionAccepted":
 				return <UserPlus className='text-purple-500' />;
+			case "sos":
+				return <AlertTriangle className='text-red-500' />;
 			default:
 				return null;
 		}
@@ -70,6 +73,15 @@ const NotificationsPage = () => {
 						</Link>{" "}
 						accepted your connection request
 					</span>
+				);
+			case "sos":
+				return (
+				<span className="text-red-600 font-semibold">
+					<Link to={`/profile/${notification.relatedUser.username}`} className='font-bold'>
+					{notification.relatedUser.name}
+					</Link>{" "}
+					needs emergency assistance! Please check on them immediately.
+				</span>
 				);
 			default:
 				return null;
@@ -112,8 +124,12 @@ const NotificationsPage = () => {
 								<li
 									key={notification._id}
 									className={`bg-white border rounded-lg p-4 my-4 transition-all hover:shadow-md ${
-										!notification.read ? "border-blue-500" : "border-gray-200"
-									}`}
+										!notification.read 
+											? notification.type === "sos" 
+												? "border-red-500 bg-red-50" 
+												: "border-blue-500"
+											: "border-gray-200"
+										} ${notification.type === "sos" ? "animate-pulse" : ""}`}
 								>
 									<div className='flex items-start justify-between'>
 										<div className='flex items-center space-x-4'>

@@ -1,4 +1,5 @@
 import Notification from "../models/notification.model.js";
+import User from "../models/user.model.js";
 
 export const getUserNotifications = async (req, res) => {
 	try {
@@ -43,4 +44,30 @@ export const deleteNotification = async (req, res) => {
 	} catch (error) {
 		res.status(500).json({ message: "Server error" });
 	}
+};
+
+export const sendSOSNotification = async (req, res) => {
+  try {
+    const sender = req.user; // The user who clicked SOS
+    
+    // Get all users except the sender
+    const allUsers = await User.find({ _id: { $ne: sender._id } });
+    
+    // Create notifications for all other users
+    const notifications = await Promise.all(
+      allUsers.map(user => 
+        Notification.create({
+          recipient: user._id,
+          type: "sos",
+          relatedUser: sender._id,
+          read: false
+        })
+      )
+    );
+    
+    res.status(200).json({ message: "SOS notifications sent successfully" });
+  } catch (error) {
+    console.error("Error in sendSOSNotification controller:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
 };

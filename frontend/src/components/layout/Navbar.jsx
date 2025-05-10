@@ -26,8 +26,21 @@ const Navbar = () => {
     },
   });
 
+  const { mutate: sendSOS } = useMutation({
+    mutationFn: () => axiosInstance.post("/notifications/sos"),
+    onSuccess: () => {
+      alert("SOS alert sent to all users!");
+    },
+    onError: (error) => {
+      console.error("Error sending SOS:", error);
+      alert("Failed to send SOS alert");
+    }
+  });
+
   const handleSOSClick = () => {
-    alert("Emergency assistance requested! Help is on the way. Stay safe.");
+    if (window.confirm("Are you sure you want to send an emergency alert to all users?")) {
+      sendSOS();
+    }
   };
 
   const unreadNotificationCount = notifications?.data.filter((notif) => !notif.read).length;
